@@ -1,14 +1,14 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import User from '../User';
 
-import users from '../../../database/mock/users';
+import users from '../../resolvers/users';
 
 const Post = new GraphQLObjectType({
   name: 'Post',
-  fields: {
+  fields: () => ({
     id: {
-      type: GraphQLID
+      type: GraphQLInt
     },
     title: {
       type: GraphQLString
@@ -16,10 +16,10 @@ const Post = new GraphQLObjectType({
     createdBy: {
       type: User,
       resolve: ({ userId }, args, context, info) => {
-        return users.find(user => user.id === userId);
+        return users.getOne(userId);
       }
     }
-  }
+  })
 });
 
 export default Post;
