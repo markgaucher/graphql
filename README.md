@@ -4,7 +4,7 @@
 
 The following commands are available:
 
-```javascript
+```shell
 # install node packages
 yarn
 
