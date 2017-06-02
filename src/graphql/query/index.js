@@ -1,25 +1,32 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
+
+import Post from '../types/Post';
+
+import posts from '../../database/mock/posts';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
-  fields: {
-    welcome: {
-      type: GraphQLString,
+  fields: () => ({
+    posts: {
+      type: new GraphQLList(Post),
+      description: 'A list of posts',
+      resolve: (source, args, context, info) => {
+        return posts;
+      }
+    },
+    post: {
+      type: Post,
+      description: 'A single post',
       args: {
-        name: {
-          type: GraphQLString
+        id: {
+          type: GraphQLInt
         }
       },
-      description: 'A sample welcome message.',
       resolve: (source, args, context, info) => {
-        if (args && args.name) {
-          return `Hello, ${args.name}!`;
-        }
-
-        return "Hello! What's your name?";
+        return posts.find(post => post.id === args.id);
       }
     }
-  }
+  })
 });
 
 export default QueryType;
