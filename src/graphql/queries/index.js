@@ -1,14 +1,35 @@
 import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 
+import Comment from '../types/Comment';
 import Post from '../types/Post';
 import User from '../types/User';
 
+import comments from '../resolvers/comments';
 import posts from '../resolvers/posts';
 import users from '../resolvers/users';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   fields: {
+    comments: {
+      type: new GraphQLList(Comment),
+      description: 'A list of comments',
+      resolve: (source, args, context, info) => {
+        return comments.getAll();
+      }
+    },
+    comment: {
+      type: Comment,
+      description: 'A single comment',
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID)
+        }
+      },
+      resolve: (source, args, context, info) => {
+        return comments.getOne(args.id);
+      }
+    },
     posts: {
       type: new GraphQLList(Post),
       description: 'A list of posts',
