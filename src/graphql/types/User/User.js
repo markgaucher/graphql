@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import Post from '../Post';
 
@@ -9,10 +9,22 @@ const User = new GraphQLObjectType({
   description: 'A registered user of the site',
   fields: () => ({
     id: {
-      type: GraphQLInt
+      type: GraphQLID
+    },
+    displayName: {
+      type: GraphQLString
+    },
+    firstName: {
+      type: GraphQLString
+    },
+    lastName: {
+      type: GraphQLString
     },
     name: {
-      type: GraphQLString
+      type: GraphQLString,
+      resolve: (source, args, context, info) => {
+        return `${source.firstName} ${source.lastName}`;
+      }
     },
     posts: {
       type: new GraphQLList(Post),

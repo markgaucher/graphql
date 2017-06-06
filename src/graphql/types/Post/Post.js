@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import User from '../User';
 
@@ -7,10 +7,7 @@ import users from '../../resolvers/users';
 const Post = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
-    id: {
-      type: GraphQLInt
-    },
-    title: {
+    body: {
       type: GraphQLString
     },
     createdBy: {
@@ -18,6 +15,12 @@ const Post = new GraphQLObjectType({
       resolve: ({ userId }, args, context, info) => {
         return users.getOne(userId);
       }
+    },
+    id: {
+      type: GraphQLID
+    },
+    title: {
+      type: GraphQLString
     }
   })
 });

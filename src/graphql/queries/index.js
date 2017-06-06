@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 
 import Post from '../types/Post';
 import User from '../types/User';
@@ -21,7 +21,7 @@ const QueryType = new GraphQLObjectType({
       description: 'A single post',
       args: {
         id: {
-          type: new GraphQLNonNull(GraphQLInt)
+          type: new GraphQLNonNull(GraphQLID)
         }
       },
       resolve: (source, args, context, info) => {
@@ -40,7 +40,7 @@ const QueryType = new GraphQLObjectType({
       description: 'A single user',
       args: {
         id: {
-          type: new GraphQLNonNull(GraphQLInt)
+          type: new GraphQLNonNull(GraphQLID)
         }
       },
       resolve: (source, args, context, info) => {

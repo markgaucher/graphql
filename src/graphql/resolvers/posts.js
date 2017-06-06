@@ -1,24 +1,53 @@
-import posts from '../../database/mock/posts';
+import MongooseService from '../../services/MongooseService';
+import postSchema from '../../database/mongoose/models/Post';
+
+const postService = new MongooseService(postSchema, 'post');
 
 class Post {
   constructor(post) {
-    this.id = post.id;
+    this.id = post._id;
+    this.body = post.body;
     this.title = post.title;
     this.userId = post.userId;
   }
 
-  static getOne(id) {
-    const post = posts.find(post => post.id === id);
-    return new Post(post);
+  static async getOne(id) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Post: ${id}`);
+    }
+
+    try {
+      const post = await postService.findOne({ _id: id });
+      return new Post(post);
+    } catch (error) {
+      return new Error(error);
+    }
   }
 
-  static getAll() {
-    return posts.map(post => new Post(post));
+  static async getAll() {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Post: *`);
+    }
+
+    try {
+      const posts = await postService.find();
+      return posts.map(post => new Post(post));
+    } catch (error) {
+      return new Error(error);
+    }
   }
 
-  static getAllByUser(userId) {
-    const filteredPosts = posts.filter(post => post.userId === userId);
-    return filteredPosts.map(post => new Post(post));
+  static async getAllByUser(userId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Post: User(${userId})`);
+    }
+
+    try {
+      const filteredPosts = postService.find({ userId });
+      return filteredPosts.map(post => new Post(post));
+    } catch (error) {
+      return new Error(error);
+    }
   }
 }
 
