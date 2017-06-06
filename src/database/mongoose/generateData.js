@@ -1,6 +1,5 @@
 import faker from 'faker';
 import random from 'lodash/random';
-import times from 'lodash/times';
 
 import MongooseService from '../../services/MongooseService';
 
@@ -12,35 +11,33 @@ const commentService = new MongooseService(commentSchema, 'comment');
 const postService = new MongooseService(postSchema, 'post');
 const userService = new MongooseService(userSchema, 'user');
 
-const users = [];
-
 const generateData = async () => {
-  commentService.remove({});
-  postService.remove({});
-  userService.remove({});
+  await removeData();
 
-  times(4, async () => {
-    const user = await generateUser();
-
-    times(random(2, 6), async () => {
-      const post = await generatePost(user);
-
-      times(random(2, 6), async () => {
-        const comment = await generateComment(post, user);
-      });
-    });
-  });
+  const users = await times(8, generateUser);
+  const posts = await times(16, () => generatePost(users[random(0, users.length - 1)]));
+  const comments = await times(64, () =>
+    generateComment(posts[random(0, posts.length - 1)], users[random(0, users.length - 1)])
+  );
 };
 
-const generateUser = () => {
+const removeData = async () => {
+  await commentService.remove({});
+  await postService.remove({});
+  await userService.remove({});
+};
+
+const generateUser = async () => {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
-  return userService.add({
+  const user = await userService.add({
     firstName,
     lastName,
     displayName: faker.internet.userName(firstName, lastName)
   });
+
+  return user;
 };
 
 const generatePost = user => {
@@ -58,6 +55,15 @@ const generateComment = (post, user) => {
     userId: user._id,
     postId: post._id
   });
+};
+
+// an async times function
+const times = async (x, callback) => {
+  const result = [];
+  for (let y = 0; y < x; ++y) {
+    result.push(await callback());
+  }
+  return result;
 };
 
 export default generateData;
