@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import User from '../User';
 
-import users from '../../resolvers/users';
+import users from '../../loaders/users';
 
 const Comment = new GraphQLObjectType({
   name: 'Comment',

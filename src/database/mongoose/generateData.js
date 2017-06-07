@@ -1,15 +1,15 @@
 import faker from 'faker';
 import random from 'lodash/random';
 
-import MongooseService from '../../services/MongooseService';
+import EntityService from '../../services/EntityService';
 
 import commentSchema from './models/Comment';
 import postSchema from './models/Post';
 import userSchema from './models/User';
 
-const commentService = new MongooseService(commentSchema, 'comment');
-const postService = new MongooseService(postSchema, 'post');
-const userService = new MongooseService(userSchema, 'user');
+const commentService = new EntityService(commentSchema, 'comment');
+const postService = new EntityService(postSchema, 'post');
+const userService = new EntityService(userSchema, 'user');
 
 const generateData = async () => {
   await removeData();
@@ -27,17 +27,15 @@ const removeData = async () => {
   await userService.remove({});
 };
 
-const generateUser = async () => {
+const generateUser = () => {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
-  const user = await userService.add({
+  return userService.add({
     firstName,
     lastName,
     displayName: faker.internet.userName(firstName, lastName)
   });
-
-  return user;
 };
 
 const generatePost = user => {

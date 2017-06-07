@@ -4,9 +4,9 @@ import Comment from '../types/Comment';
 import Post from '../types/Post';
 import User from '../types/User';
 
-import comments from '../resolvers/comments';
-import posts from '../resolvers/posts';
-import users from '../resolvers/users';
+import comments from '../loaders/comments';
+import posts from '../loaders/posts';
+import users from '../loaders/users';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',

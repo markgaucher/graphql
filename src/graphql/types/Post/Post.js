@@ -3,8 +3,8 @@ import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphq
 import Comment from '../Comment';
 import User from '../User';
 
-import comments from '../../resolvers/comments';
-import users from '../../resolvers/users';
+import comments from '../../loaders/comments';
+import users from '../../loaders/users';
 
 const Post = new GraphQLObjectType({
   name: 'Post',

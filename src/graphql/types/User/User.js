@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphq
 
 import Post from '../Post';
 
-import posts from '../../resolvers/posts';
+import posts from '../../loaders/posts';
 
 const User = new GraphQLObjectType({
   name: 'User',

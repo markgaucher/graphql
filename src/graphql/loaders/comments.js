@@ -1,7 +1,7 @@
-import MongooseService from '../../services/MongooseService';
+import EntityService from '../../services/EntityService';
 import commentSchema from '../../database/mongoose/models/Comment';
 
-const commentService = new MongooseService(commentSchema, 'comment');
+const commentService = new EntityService(commentSchema, 'comment');
 
 class Comment {
   constructor(comment) {
@@ -18,7 +18,7 @@ class Comment {
     }
 
     try {
-      const comment = await commentService.findOne({ _id: id });
+      const comment = await commentService.getById(id);
       return new Comment(comment);
     } catch (error) {
       return new Error(error);

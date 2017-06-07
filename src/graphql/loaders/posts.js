@@ -1,7 +1,7 @@
-import MongooseService from '../../services/MongooseService';
+import EntityService from '../../services/EntityService';
 import postSchema from '../../database/mongoose/models/Post';
 
-const postService = new MongooseService(postSchema, 'post');
+const postService = new EntityService(postSchema, 'post');
 
 class Post {
   constructor(post) {
@@ -17,7 +17,7 @@ class Post {
     }
 
     try {
-      const post = await postService.findOne({ _id: id });
+      const post = await postService.getById(id);
       return new Post(post);
     } catch (error) {
       return new Error(error);
