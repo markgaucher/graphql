@@ -1,8 +1,3 @@
-import EntityService from '../../services/EntityService';
-import commentSchema from '../../database/mongoose/models/Comment';
-
-const commentService = new EntityService(commentSchema, 'comment');
-
 class Comment {
   constructor(comment) {
     this.id = comment._id;
@@ -12,39 +7,36 @@ class Comment {
     this.userId = comment.userId;
   }
 
-  static async getOne(id) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Comment: ${id}`);
-    }
-
+  static async add(commentLoader, input) {
     try {
-      const comment = await commentService.getById(id);
+      const comment = await commentLoader.add(input);
       return new Comment(comment);
     } catch (error) {
       return new Error(error);
     }
   }
 
-  static async getAll() {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Comment: *`);
-    }
-
+  static async getOne(commentLoader, id) {
     try {
-      const comments = await commentService.find();
+      const comment = await commentLoader.load(id);
+      return new Comment(comment);
+    } catch (error) {
+      return new Error(error);
+    }
+  }
+
+  static async getAll(commentLoader) {
+    try {
+      const comments = await commentLoader.find();
       return comments.map(comment => new Comment(comment));
     } catch (error) {
       return new Error(error);
     }
   }
 
-  static async getAllByPost(postId) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Comment: Post(${postId})`);
-    }
-
+  static async getAllByPost(commentLoader, postId) {
     try {
-      const filteredComments = commentService.find({ postId });
+      const filteredComments = commentLoader.find({ postId });
       return filteredComments.map(comment => new Comment(comment));
     } catch (error) {
       return new Error(error);

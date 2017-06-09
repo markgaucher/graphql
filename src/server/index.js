@@ -15,7 +15,7 @@ Glue.compose(glueManifest, { relativeTo: __dirname }, (error, server) => {
     }
 
     Mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/normative');
-    generateData();
+    // generateData();
 
     console.log(`SERVER running at: ${server.info.uri}`);
   });

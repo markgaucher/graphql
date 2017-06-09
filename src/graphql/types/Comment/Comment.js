@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import User from '../User';
+import { User } from '../User';
 
 import users from '../../loaders/users';
 
@@ -13,7 +13,7 @@ const Comment = new GraphQLObjectType({
     createdBy: {
       type: User,
       resolve: ({ userId }, args, context, info) => {
-        return users.getOne(userId);
+        return users.getOne(context.loaders.userLoader, userId);
       }
     },
     id: {

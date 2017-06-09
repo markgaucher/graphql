@@ -1,8 +1,8 @@
 import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 
-import Comment from '../types/Comment';
-import Post from '../types/Post';
-import User from '../types/User';
+import { Comment } from '../types/Comment';
+import { Post } from '../types/Post';
+import { User } from '../types/User';
 
 import comments from '../loaders/comments';
 import posts from '../loaders/posts';
@@ -15,7 +15,7 @@ const QueryType = new GraphQLObjectType({
       type: new GraphQLList(Comment),
       description: 'A list of comments',
       resolve: (source, args, context, info) => {
-        return comments.getAll();
+        return comments.getAll(context.loaders.commentLoader);
       }
     },
     comment: {
@@ -27,14 +27,15 @@ const QueryType = new GraphQLObjectType({
         }
       },
       resolve: (source, args, context, info) => {
-        return comments.getOne(args.id);
+        return comments.getOne(context.loaders.commentLoader, args.id);
       }
     },
     posts: {
       type: new GraphQLList(Post),
       description: 'A list of posts',
-      resolve: (source, args, context, info) => {
-        return posts.getAll();
+      resolve: async (source, args, context, info) => {
+        const result = await posts.getAll(context.loaders.postLoader);
+        return result;
       }
     },
     post: {
@@ -46,14 +47,14 @@ const QueryType = new GraphQLObjectType({
         }
       },
       resolve: (source, args, context, info) => {
-        return posts.getOne(args.id);
+        return posts.getOne(context.loaders.postLoader, args.id);
       }
     },
     users: {
       type: new GraphQLList(User),
       description: 'A list of users',
       resolve: (source, args, context, info) => {
-        return users.getAll();
+        return users.getAll(context.loaders.userLoader);
       }
     },
     user: {
@@ -65,7 +66,7 @@ const QueryType = new GraphQLObjectType({
         }
       },
       resolve: (source, args, context, info) => {
-        return users.getOne(args.id);
+        return users.getOne(context.loaders.userLoader, args.id);
       }
     }
   }

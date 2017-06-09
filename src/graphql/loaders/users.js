@@ -1,8 +1,3 @@
-import userSchema from '../../database/mongoose/models/User';
-import EntityService from '../../services/EntityService';
-
-const userService = new EntityService(userSchema, 'user');
-
 class User {
   constructor(user) {
     this.id = user._id;
@@ -11,26 +6,27 @@ class User {
     this.lastName = user.lastName;
   }
 
-  static async getOne(id) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`User: ${id}`);
-    }
-
+  static async add(userLoader, input) {
     try {
-      const user = await userService.getById(id);
+      const user = await userLoader.add(input);
       return new User(user);
     } catch (error) {
       return new Error(error);
     }
   }
 
-  static async getAll() {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`User: *`);
-    }
-
+  static async getOne(userLoader, id) {
     try {
-      const users = await userService.find();
+      const user = await userLoader.load(id);
+      return new User(user);
+    } catch (error) {
+      return new Error(error);
+    }
+  }
+
+  static async getAll(userLoader) {
+    try {
+      const users = await userLoader.find();
       return users.map(user => new User(user));
     } catch (error) {
       return new Error(error);

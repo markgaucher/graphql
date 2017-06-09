@@ -1,3 +1,9 @@
-import Post from './Post';
+import AddPostInput from './AddPostInput';
+import AddPostPayload from './AddPostPayload';
 
-export default Post;
+export const Post = require('./Post').default;
+
+export default {
+  AddPostInput,
+  AddPostPayload
+};
